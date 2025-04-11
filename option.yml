@@ -1,0 +1,68 @@
+#
+# @Author: wjm
+# @Date: 2019-10-13 21:45:10
+# @LastEditTime: 2019-10-13 21:46:06
+# @Description: file content
+# 
+
+name: Net
+algorithm: a_panmamba_conv
+nEpochs: 500
+gpu_mode: True
+save_best: True
+gpus: [1]
+threads: 4  #num_works
+log_dir: /home/yangqize/HU/test_CMTB/result/log/
+
+seed: 123 #123
+checkpoint: /home/yangqize/HU/test_CMTB/result/checkpoint/
+data_dir_train: /home/yangqize/HU/test_CMTB/data_disk/yaogan/WV2_data/train128
+data_dir_eval:  /home/yangqize/HU/test_CMTB/data_disk/yaogan/WV2_data/test128
+
+
+source_ms: ms
+source_pan: pan
+
+pretrain:
+  pretrained: True
+  pre_sr: a_panmamba_conv_4_1744284949/latest.pth
+  pre_folder: /home/yangqize/HU/test_CMTB/result/checkpoint/
+
+test:  #用于指标测试的代码
+  algorithm: a_wave_cmtb
+  #cmtb_inter_cross3_3v4 #pannetffft
+  type: test #[test, eval]
+  data_dir: /home/yangqize/HU/test_CMTB/data_disk/yaogan/WV2_data/test128
+  source_ms: ms
+  source_pan: pan
+  model: /home/yangqize/HU/test_CMTB/result/checkpoint/a_panmamba_new_4_1743770932/bestPSNR.pth #cmtb_inter_cross3_3v4_4_1692531045/latest.pth
+  #unet_pan_4_1669431831/best.pth #unet_pan_4_1669425995/best.pth #MAUNetV3_4_1638761339/best.pth
+  #ugcn_s4nb_4_1630230918/best.pth  latest
+  #model: ugcn_s4nb_4_1630368984/best.pth
+  save_dir: /home/yangqize/HU/test_CMTB/result/a_panmamba_conv_v666
+
+data:
+  upsacle:  4
+  batch_size: 4 #4
+  patch_size: 32
+  data_augmentation: False
+  n_colors: 4
+  rgb_range: 255
+  normalize : False
+  
+schedule:
+  lr:  5e-7   #5e-6   #5e-4   #1e-3  #1e-2  5e-5
+  decay: 500   #学习率下降步长
+  gamma: 0.1  #衰减因子
+  optimizer: ADAM #[ADAM, SGD, RMSprop]
+  momentum: 0.9 #SGD momentum
+  beta1: 0.9 #ADAM beta
+  beta2: 0.999 #ADAM beta
+  epsilon: 1e-8 #ADAM epsilon
+  alpha: 0.9 #RMSprop alpha
+  weight_dency: 0
+  gclip: 4 #0.4   #0.4  0.04
+  loss: L1 #[MSE, L1]
+  use_YCbCr: False
+
+
